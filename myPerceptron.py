@@ -21,6 +21,7 @@ class Perceptron:
 
     def __init__(self, Training_set):
         self.Data = Training_set
+        self. y  = []
 
         pass
     # the train- ing_step method accepts a data batch to return the loss value,
