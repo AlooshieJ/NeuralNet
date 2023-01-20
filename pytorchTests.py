@@ -21,6 +21,8 @@ A = torch.arange(6).reshape(3, 2)
 print (A, "\n",A.T) # A.T is transpose
 """
 
+#------------------- CODE FOR HW QUESTION 2 ---------------------
+
 # equation 2x1 + 3x2 + 4x3 - 4 = 0
 # let x1 = x , x2 = y , x3 = z... then:
 #z = -1/2 * x - 3/4 * y + 1
