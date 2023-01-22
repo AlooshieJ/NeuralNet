@@ -3,23 +3,13 @@ from d2l import torch as d2l
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
-# from d2l book This function adds atrributes to class.
-def add_to_class(Class):  #@save
-    def wrapper(obj):
-        setattr(Class, obj.__name__, obj)
-    return wrapper
-
-
-
 # perceptron implementation from scratch
 class Perceptron():
     def __init__(self,bigX ,y,bias,debug = False):
         """
-
-        :param bigX: The n dim. Data to train with; features
-        :param y: The class for each data point
+        :param bigX: The n-dim. Data to train with; features array
+        :param y: The class of each feature
+        :param debug: whether or not to show print statements
         """
         self.X = bigX # matrix of features
         self.y  = y # matrix of class for each data point
@@ -72,7 +62,12 @@ class Perceptron():
 
     #train function runs the percpetron algorithm with activation function
     #to update the weight vector based on previous data
+    #NOTE: THIS IS NOT FULLY IMPLIMENTED, JUST A START
     def train(self,weights ,iterations=50):
+
+        if self.debug:
+            self.showdata2d()
+
         w_train = weights
         for n in range(iterations):
             print(f"--TRINAING-- iter: {n}")
@@ -95,9 +90,7 @@ P = Perceptron(data, data_class,1)
 # starting weight vectors, using the ones for HW Q
 #inital_weights = torch.zeros(2,dtype=torch.float32)
 inital_weights = torch.ones(2,dtype=torch.float32)
-
 final_w = P.train(inital_weights,iterations= 5)
-
 print( "Final W  = " , final_w ,f"with Bias of {P.b}" )
 
 # plt.scatter(data[:,0],data[:,1])
