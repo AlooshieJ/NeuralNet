@@ -11,7 +11,7 @@ def add_to_class(Class):  #@save
         setattr(Class, obj.__name__, obj)
     return wrapper
 
-
+# ---UTILS from book
 
 # perceptron implementation from scratch
 class Perceptron():
