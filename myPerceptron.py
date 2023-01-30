@@ -3,29 +3,21 @@ from d2l import torch as d2l
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
-# from d2l book This function adds atrributes to class.
-def add_to_class(Class):  #@save
-    def wrapper(obj):
-        setattr(Class, obj.__name__, obj)
-    return wrapper
-
-# ---UTILS from book
-
 # perceptron implementation from scratch
 class Perceptron():
-    def __init__(self,bigX ,y,bias,debug = False):
+    def __init__(self, bigX, y, bias, debug = False):
         """
-
-        :param bigX: The n dim. Data to train with; features
-        :param y: The class for each data point
+        :param bigX: The n-dim. Data to train with; features array
+        :param y: The class of each feature
+        :param debug: whether or not to show print statements
         """
         self.X = bigX # matrix of features
-        self.y  = y # matrix of class for each data point
+        self.y = y # matrix of class for each data point
 
+        self.w = [] # weights vector
         self. n = len(self.X[0]) # dimensions of feature matrix
         self.b = bias
+
 
         self.debug = debug
 
@@ -72,8 +64,14 @@ class Perceptron():
 
     #train function runs the percpetron algorithm with activation function
     #to update the weight vector based on previous data
+    #NOTE: THIS IS NOT FULLY IMPLIMENTED, JUST A START
     def train(self,weights ,iterations=50):
+
+        if self.debug:
+            self.showdata2d()
+
         w_train = weights
+        print(f"Initial W = {w_train}")
         for n in range(iterations):
             print(f"--TRINAING-- iter: {n}")
             w_train = self.forward(w_train)
@@ -86,19 +84,33 @@ class Perceptron():
 #preparing data from graph in homework
 reds= torch.tensor([[1,1],[2,1],[1,2],[2,2]],dtype=torch.float32)# = 1
 blues = torch.tensor([[0,-1], [-1,-1],[-1,0]],dtype=torch.float32) # = -1
+"""
+#Data in the form {X,y}
+# where X = [ [x1,x2] , y ],
+#               ...
+#           [ [x1n,x2n],yn]
+D = np.array( [
+    [[1,1],1],
+    [[2,1],1],
+    [[1,2],1],
+    [[2,2],1],
+    [[0,-1],-1],
+    [[-1,-1],-1],
+    [[-1,0],-1]
+])
+"""
 
 data_class = torch.tensor([1,1,1,1,-1,-1,-1],dtype=torch.float32)
-data= torch.cat((reds,blues),0)
+data= torch.cat((reds, blues), 0)
 
-P = Perceptron(data, data_class,1)
+P = Perceptron(data, data_class, 1)
 
 # starting weight vectors, using the ones for HW Q
 #inital_weights = torch.zeros(2,dtype=torch.float32)
 inital_weights = torch.ones(2,dtype=torch.float32)
-
 final_w = P.train(inital_weights,iterations= 5)
-
 print( "Final W  = " , final_w ,f"with Bias of {P.b}" )
 
+#
 # plt.scatter(data[:,0],data[:,1])
 # plt.show()
