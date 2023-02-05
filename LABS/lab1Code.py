@@ -38,40 +38,54 @@ plt.stem(k, x)
 """
 PART A3)
 """
-n = np.arange(-40, 80, 1)
+k = np.arange(-40, 80, 1)
 # x[n] function
+n = np.arange(0,len(k),1)
 x = 7 * np.cos(0.1 * n) + np.cos(0.95 * n)
 # k = np.arange(-40,80,1)
 # xofn =[7 * np.cos(0.1 * n) + np.cos(0.95 * n) for n in np.arange(-40,80,1)]
 fig5 = plt.figure(5)
-plt.stem(n, x)
+plt.stem(k, x)
 
 #x[n-20]
+
 x = 7 * np.cos(0.1 * n-20) + np.cos(0.95 * n-20)
 fig6 = plt.figure(6)
-plt.stem(n, x)
+plt.stem(k, x)
 
 """
 PART B)
 """
-h=1./5.*np.array([1.,1.,1.,1.,1.])
+# length of array
+N = 5
+h = 1./5. * np.array([1*N])
 k = np.arange(0,20,1)
+
 #2a
-x = np.ones(shape=5)
-y=np.convolve(x,h)
+
+x= np.ones(shape=len(k))
+y=np.convolve(x, h)
 fig7 = plt.figure(7)
 plt.stem(k, y)
 
-#2b
 k = np.arange(-40,80,1)
-y = np.convolve(np.cos(0.1*k),h)
+#2b
+x = np.cos(0.1*k)
+y = np.convolve(x,h)
 fig8=plt.figure(8)
 plt.stem(k,y)
 
-
 #2c
-y = np.convolve(np.cos(0.95*k),h)
-fig9 = plt.figure(9)
+x = np.cos(0.95*k)
+y = np.convolve(x,h)
+fig9=plt.figure(9)
+plt.stem(k,y)
+
+#2d
+n = np.arange(0,len(k),1)
+x = 7 * np.cos(0.1 * n) + np.cos(0.95 * n)
+y = np.convolve(x,h)
+fig10=plt.figure(10)
 plt.stem(k,y)
 
 plt.show()
