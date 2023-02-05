@@ -59,7 +59,6 @@ k = np.arange(0,20,1)
 #2a
 x = np.ones(shape=5)
 y=np.convolve(x,h)
-print(y)
 fig7 = plt.figure(7)
 plt.stem(k, y)
 
@@ -68,9 +67,11 @@ k = np.arange(-40,80,1)
 y = np.convolve(np.cos(0.1*k),h)
 fig8=plt.figure(8)
 plt.stem(k,y)
-plt.show()
+
 
 #2c
 y = np.convolve(np.cos(0.95*k),h)
 fig9 = plt.figure(9)
 plt.stem(k,y)
+
+plt.show()
