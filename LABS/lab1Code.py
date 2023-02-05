@@ -54,20 +54,23 @@ plt.stem(n, x)
 """
 PART B)
 """
-# length of array
-N = 20
-h = 1./5. * np.array([1*N])
+h=1./5.*np.array([1.,1.,1.,1.,1.])
 k = np.arange(0,20,1)
 #2a
-y=np.convolve(np.ones(shape=N),h)
+x = np.ones(shape=5)
+y=np.convolve(x,h)
 print(y)
 fig7 = plt.figure(7)
-plt.stem(k,y)
+plt.stem(k, y)
 
 #2b
 k = np.arange(-40,80,1)
 y = np.convolve(np.cos(0.1*k),h)
 fig8=plt.figure(8)
 plt.stem(k,y)
-print(y)
 plt.show()
+
+#2c
+y = np.convolve(np.cos(0.95*k),h)
+fig9 = plt.figure(9)
+plt.stem(k,y)
