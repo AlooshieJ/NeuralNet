@@ -56,18 +56,6 @@ plt.stem(k, x)
 """
 PART B)
 """
-
-#
-# def convolve(x,k,fig_num):
-#
-#     N=5
-#     h = 1./5. * np.array([1*N])
-#     y = np.convolve(x,h)
-#     plt.stem(k,y)
-#     plt.figure(fig_num)
-#     return y
-
-
 # length of array
 N = 5
 h = 1./5. * np.array([1*N])
@@ -76,7 +64,6 @@ k = np.arange(0,20,1)
 #2a
 x= np.ones(shape=len(k))
 y=np.convolve(x, h)
-#print(y)
 fig7 = plt.figure(7)
 plt.stem(k, y)
 
@@ -98,9 +85,6 @@ n = np.arange(0,len(k),1)
 x = 7 * np.cos(0.1 * n) + np.cos(0.95 * n)
 y = np.convolve(x,h)
 fig10=plt.figure(10)
-
 plt.stem(k,y)
 
-
-#print(y)
 plt.show()
