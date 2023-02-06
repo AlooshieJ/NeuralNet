@@ -1,6 +1,14 @@
-import torch
 import numpy as np
 import matplotlib.pyplot as plt
+
+"""
+----------------
+ECE 491 : Intro to Neural Networks 
+LAB #1 - Intro to Python and 1-D convolution
+By: Ali Jafar 
+UIN: 669430206
+----------------
+"""
 
 """
 PART A1) 
@@ -39,16 +47,14 @@ plt.stem(k, x)
 PART A3)
 """
 k = np.arange(-40, 80, 1)
+
 # x[n] function
 n = np.arange(0,len(k),1)
 x = 7 * np.cos(0.1 * n) + np.cos(0.95 * n)
-# k = np.arange(-40,80,1)
-# xofn =[7 * np.cos(0.1 * n) + np.cos(0.95 * n) for n in np.arange(-40,80,1)]
 fig5 = plt.figure(5)
 plt.stem(k, x)
 
 #x[n-20]
-
 x = 7 * np.cos(0.1 * n-20) + np.cos(0.95 * n-20)
 fig6 = plt.figure(6)
 plt.stem(k, x)
@@ -56,36 +62,66 @@ plt.stem(k, x)
 """
 PART B)
 """
+N=5
 # length of array
-N = 5
-h = 1./5. * np.array([1*N])
-k = np.arange(0,20,1)
+h=1./5.*np.array([1.,1.,1.,1.,1.])
+k = np.arange(0,21,1)
 
+#NOTE: The keyword mode = "same" for the convolution this keeps the output length in the boundry
+# of the inputs given
 #2a
-
 x= np.ones(shape=len(k))
-y=np.convolve(x, h)
+y=np.convolve(x, h,mode="same")
 fig7 = plt.figure(7)
 plt.stem(k, y)
 
 k = np.arange(-40,80,1)
 #2b
 x = np.cos(0.1*k)
-y = np.convolve(x,h)
+y = np.convolve(x,h,mode="same")
 fig8=plt.figure(8)
 plt.stem(k,y)
 
 #2c
 x = np.cos(0.95*k)
-y = np.convolve(x,h)
+y = np.convolve(x,h,mode="same")
 fig9=plt.figure(9)
 plt.stem(k,y)
 
 #2d
 n = np.arange(0,len(k),1)
 x = 7 * np.cos(0.1 * n) + np.cos(0.95 * n)
-y = np.convolve(x,h)
+y = np.convolve(x,h,mode="same")
 fig10=plt.figure(10)
+plt.stem(k,y)
+
+
+#3a)
+h = [1,-1]
+k = np.arange(0,21,1)
+x = np.ones(shape= len(k))
+y = np.convolve(x,h,mode="same")
+fig11=plt.figure(11)
+plt.stem(k,y)
+
+#3b
+k = np.arange(-40,80,1) #new k range
+x = np.cos(0.1*k)
+y = np.convolve(x,h,mode="same")
+fig12 = plt.figure(12)
+plt.stem(k,y)
+
+#3c
+x = np.cos(0.95*k)
+y = np.convolve(x,h,mode="same")
+fig13 = plt.figure(13)
+plt.stem(k,y)
+
+#3d
+n = np.arange(0,len(k),1)
+x = 7 * np.cos(0.1 * n) + np.cos(0.95 * n)
+y = np.convolve(x,h,mode="same")
+fig14=plt.figure(14)
 plt.stem(k,y)
 
 plt.show()
