@@ -21,7 +21,8 @@ class Predictor:
     # X = [x1,x2] = [ x[n] , x[n-1] ]
     #returns output y[n] = dot product of X w/ weight
     def predict(self,X,W):
-        return np.dot(X,W) + self.bias
+        #W= np.flip(W)
+        return np.dot(X,W)
 
     # return error squared
     def error_calc(self,predicted,actual):
@@ -34,37 +35,43 @@ class Predictor:
         error_sum = 0
         w = w1
         error = 0
+        count = 0
         if self.debug:
             print("Input Data: ",xn,"\nInitial weight: ",w1,"\n-----------------")
 
         for i in range(len(xn)):
+            if self.debug:
+                print("iteration: ",i)
             #predict
             #X = xn[i:(i+1)+1]
             X = xn[i:i+self.order]
+            X = np.flip(X)
+            X = np.append(X,self.bias)
             prediction = self.predict(X,w)
 
             # condition to get out of predictor loop
             try:
                 actual = xn[i+self.order]
             except IndexError:
-
-                print("final Prediction:",prediction,"Final Weights: ",w,"Bias: ",self.bias)
+                print("final Prediction:",prediction,"Final Weights: ",w,"Bias: ",w[self.order])
                 break
-            error = self.error_calc(prediction,actual)
-            error_sum += (error**2)
 
-            #updating weights
+            error = self.error_calc(prediction,actual)
+            error_sum += error**2
+            count += 1
+
             if self.debug:
                 f = f"X: {X} prediciton: {prediction} | {actual}, w = {w},error:{error}"
                 print(f,end=" ")
+
+            #updating weights
             n = 1/ (np.linalg.norm(X))**2
-            w = w +  n * np.dot(error,X)
+            w = w + n * error * X#np.dot(error,X)
             if self.debug:
                 print("updated w :",w)
                 print("----------------")
-
-        mse = 1/len(xn) * error_sum
-        mse /= 100
+        mse = (1/count) * error_sum
+        #mse /= 100
         # divide by 100 for the percent
         f = f"avg. error (MSE) = {mse}%"
         print(f)
@@ -84,20 +91,23 @@ for a in Data['Close/Last']:
 #reversing data, so that the earliest value is first
 #print(inputs)
 inputs.reverse()
-P = Predictor()
-P.MSE(DataHW,[.5,.5])
+inputs = np.array(inputs)
+# testing w/ q1 homework data
+#P = Predictor()
+#P.MSE(DataHW,[.5,.5])
 
 
-# q 2a 2nd order predictor no bias
+# # q 2a 2nd order predictor no bias
 Pa = Predictor()
-Pa.MSE(inputs,[1,1])
+Pa.MSE(inputs,np.array([.5,.5,0]))
+
 
 # q 2b 2nd order predictor with bias
-Pb = Predictor(bias=1)
-Pb.MSE(inputs,[1,1])
-# q 2c 3rd order predictor no bias
+Pb = Predictor(bias=-1)
+Pb.MSE(inputs,[.5,.5,10])
+# # q 2c 3rd order predictor no bias
 Pc = Predictor(order = 3)
-Pc.MSE(inputs,[1,1,1])
-# q 2d 3rd order predictor with bias
-Pd = Predictor(order= 3,bias = 15)
-Pd.MSE(inputs,[1,1,1])
+Pc.MSE(inputs,[.5,.5,.5,0])
+# # q 2d 3rd order predictor with bias
+Pd = Predictor(order= 3,bias =-1)
+Pd.MSE(inputs,[.5,.5,.5,15])
