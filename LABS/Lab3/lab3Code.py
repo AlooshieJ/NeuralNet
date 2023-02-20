@@ -125,9 +125,56 @@ test_ims.astype(np.float32)
 test_lbs.astype(np.float32)
 
 #Q8) converting labels values from {0,1} to {-1,1} no loop
-#
-# val_lbs
-# train_lbs
-# test_lbs
+
+test_lbs= np.where(test_lbs == 0 , -1,test_lbs)
+train_lbs = np.where(train_lbs == 0 , -1,train_lbs)
+val_lbs = np.where(val_lbs == 0 , -1,val_lbs)
+
+# #printing to test if they changed
+# for l in test_lbs : print(l,end=" ")
+# print()
+# for l in train_lbs : print(l,end=" ")
+# print()
+# for l in val_lbs : print(l,end=" ")
+
+
+#Q9)
+weights = np.random.normal(0.0, 1.0, size=(NROWS*NCOLS))
+num_training_samples = len(train_ims)
+num_val_samples = len(val_ims)
+print(num_training_samples)
+eta = 1/15#this is a scalar variable for the learning rate, choose a suitable value
+for idx in range(num_training_samples):
+  # read the i-th image
+  x  = train_ims[idx,:]
+  # read the i-th label
+  y_true = train_lbs[idx]
+
+  #using np.dot to make prediction
+  y_pred = np.dot(weights.T,x)
+
+  #error is actual - predicted
+  error = (y_true-y_pred)
+  update = eta*error*x
+  weights +=update
+  #every 100 step we want to check the accuracy over the validation data
+  acc_count = 0 #we will store the number of correct predictions
+  if idx%100==0:
+    for val_idx in range(num_val_samples):
+      x = val_ims[val_idx,:]
+      y_true = val_lbs[val_idx]
+      #predict the label of the sample
+      val_pred = np.dot(weights.T,x)
+
+      #if prediction is correct, increase the counter
+      if val_pred == y_true:
+          acc_count+=1
+
+  accuracy = acc_count*100./num_val_samples
+  print("step:%d, acc:%.2f"%(idx, accuracy))
+  #if accuracy is above 0.90, terminate by using “break”
+  if accuracy > 0.9:break
+
+
 
 plt.show()
