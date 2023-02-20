@@ -21,7 +21,6 @@ class Predictor:
     # X = [x1,x2] = [ x[n] , x[n-1] ]
     #returns output y[n] = dot product of X w/ weight
     def predict(self,X,W):
-        #W= np.flip(W)
         return np.dot(X,W)
 
     # return error squared
