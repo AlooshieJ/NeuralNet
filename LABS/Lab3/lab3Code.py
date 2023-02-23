@@ -13,6 +13,11 @@ MNIST_TEST_LBS_GZ = os.path.join(DATASET_DIR, "t10k-labels-idx1-ubyte.gz")
 NROWS = 28
 NCOLS = 28
 
+def sign(n):
+    if n>=0:
+        return 1
+    else:
+        return -1
 
 def load_data():
     print("Unpacking training images ...")
@@ -143,38 +148,53 @@ weights = np.random.normal(0.0, 1.0, size=(NROWS*NCOLS))
 num_training_samples = len(train_ims)
 num_val_samples = len(val_ims)
 print(num_training_samples)
-eta = 1/15#this is a scalar variable for the learning rate, choose a suitable value
+eta = 1/2#this is a scalar variable for the learning rate, choose a suitable value
 for idx in range(num_training_samples):
-  # read the i-th image
-  x  = train_ims[idx,:]
-  # read the i-th label
-  y_true = train_lbs[idx]
 
-  #using np.dot to make prediction
-  y_pred = np.dot(weights.T,x)
+    #read the i-th image
+    x  = train_ims[idx,:]
+    #read the i-th label
+    y_true = train_lbs[idx]
+    y_pred = sign(np.dot(weights.T,x))
+    error = (y_true-y_pred)
+    update = eta*error*x
+    weights +=update
 
-  #error is actual - predicted
-  error = (y_true-y_pred)
-  update = eta*error*x
-  weights +=update
   #every 100 step we want to check the accuracy over the validation data
-  acc_count = 0 #we will store the number of correct predictions
-  if idx%100==0:
-    for val_idx in range(num_val_samples):
-      x = val_ims[val_idx,:]
-      y_true = val_lbs[val_idx]
-      #predict the label of the sample
-      val_pred = np.dot(weights.T,x)
+    acc_count = 0 #we will store the number of correct predictions
+    if idx%100==0:
+        for val_idx in range(num_val_samples):
+            x = val_ims[val_idx,:]
+            y_true = val_lbs[val_idx]
+            #predict the label of the sample
+            val_pred = sign(np.dot(weights.T,x))
 
-      #if prediction is correct, increase the counter
-      if val_pred == y_true:
-          acc_count+=1
+            #if prediction is correct, increase the counter
+            if val_pred == y_true:
+                acc_count+=1
 
-  accuracy = acc_count*100./num_val_samples
-  print("step:%d, acc:%.2f"%(idx, accuracy))
-  #if accuracy is above 0.90, terminate by using “break”
-  if accuracy > 0.9:break
+        accuracy = (acc_count*100.)/num_val_samples
+        print("step:%d, acc:%.2f"%(idx, accuracy))
+    #if accuracy is above 0.90, terminate by using “break”
+    if accuracy > 90 :
+        break
+print("-----NOW RUNNING ON TEST DATA-----")
+acc_count = 0
+num_test_samples = len(test_ims)
+for test_idx in range(num_test_samples):
+    x = test_ims[test_idx,:]
+    y_true = test_lbs[test_idx]
+    val_pred = sign(np.dot(weights.T,x))
 
+    if val_pred == y_true:
+        acc_count+=1
+accuracy = (acc_count * 100.)/num_test_samples
+    # print("Step: %d, acc:%.2f"%(test_idx,accuracy))
+print("After testing with {} images, accuracy:{:.2f}%".format(num_test_samples,accuracy))
+weights_img = weights.reshape((NROWS,NCOLS))
+#weights_img *=0.5
+plt.figure(3)
+plt.imshow(weights_img)
 
 
 plt.show()
