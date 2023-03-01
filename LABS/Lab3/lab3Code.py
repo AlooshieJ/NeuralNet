@@ -18,7 +18,10 @@ def sign(n):
         return 1
     else:
         return -1
-
+def RELU(n):
+    if n <=0:
+        return -1
+    return n
 def load_data():
     print("Unpacking training images ...")
     with gzip.open(MNIST_TRAIN_IMS_GZ, mode='rb') as f:
@@ -144,19 +147,20 @@ val_lbs = np.where(val_lbs == 0 , -1,val_lbs)
 
 
 #Q9)
-weights = np.random.normal(0.0, 1.0, size=(NROWS*NCOLS))
+#weights = np.random.normal(0.0, 1.0, size=(NROWS*NCOLS))
+weights = np.ones(NROWS*NCOLS)
+#weights = np.zeros(NROWS*NCOLS)
 num_training_samples = len(train_ims)
 num_val_samples = len(val_ims)
 print(num_training_samples)
-eta = 1/2#this is a scalar variable for the learning rate, choose a suitable value
+eta = 1/100#this is a scalar variable for the learning rate, choose a suitable value
 for idx in range(num_training_samples):
-
     #read the i-th image
     x  = train_ims[idx,:]
     #read the i-th label
     y_true = train_lbs[idx]
     y_pred = sign(np.dot(weights.T,x))
-    error = (y_true-y_pred)
+    error = 1/2*((y_true-y_pred)**2)
     update = eta*error*x
     weights +=update
 
@@ -168,16 +172,19 @@ for idx in range(num_training_samples):
             y_true = val_lbs[val_idx]
             #predict the label of the sample
             val_pred = sign(np.dot(weights.T,x))
+            #val_pred = RELU(np.dot(weights.T,x))
 
             #if prediction is correct, increase the counter
             if val_pred == y_true:
                 acc_count+=1
 
-        accuracy = (acc_count*100.)/num_val_samples
-        print("step:%d, acc:%.2f"%(idx, accuracy))
+    accuracy = (acc_count*100.)/num_val_samples
+    print("step:%d, acc:%.2f"%(idx, accuracy))
     #if accuracy is above 0.90, terminate by using “break”
     if accuracy > 90 :
         break
+
+# Q12 accuracy with test data
 print("-----NOW RUNNING ON TEST DATA-----")
 acc_count = 0
 num_test_samples = len(test_ims)
@@ -191,8 +198,10 @@ for test_idx in range(num_test_samples):
 accuracy = (acc_count * 100.)/num_test_samples
     # print("Step: %d, acc:%.2f"%(test_idx,accuracy))
 print("After testing with {} images, accuracy:{:.2f}%".format(num_test_samples,accuracy))
+
+# Q13 displaying weights vector
 weights_img = weights.reshape((NROWS,NCOLS))
-#weights_img *=0.5
+#weights_img *=2
 plt.figure(3)
 plt.imshow(weights_img)
 
