@@ -153,14 +153,15 @@ weights = np.ones(NROWS*NCOLS)
 num_training_samples = len(train_ims)
 num_val_samples = len(val_ims)
 print(num_training_samples)
-eta = 1/100#this is a scalar variable for the learning rate, choose a suitable value
+eta = 1#this is a scalar variable for the learning rate, choose a suitable value
 for idx in range(num_training_samples):
     #read the i-th image
     x  = train_ims[idx,:]
     #read the i-th label
     y_true = train_lbs[idx]
     y_pred = sign(np.dot(weights.T,x))
-    error = 1/2*((y_true-y_pred)**2)
+    #error = 1/2*((y_true-y_pred)**2)
+    error = .5*(y_true-y_pred)
     update = eta*error*x
     weights +=update
 
