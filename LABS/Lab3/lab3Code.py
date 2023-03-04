@@ -154,6 +154,12 @@ num_training_samples = len(train_ims)
 num_val_samples = len(val_ims)
 print(num_training_samples)
 eta = 1#this is a scalar variable for the learning rate, choose a suitable value
+
+# the training function will return the weight as a numpy array
+def train_loop(train_data,train_label,val_data,val_label,eta,weight):
+    pass
+
+
 for idx in range(num_training_samples):
     #read the i-th image
     x  = train_ims[idx,:]

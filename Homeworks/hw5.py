@@ -67,9 +67,9 @@ def load_data():
 train_ims, train_lbs, test_ims, test_lbs = load_data()
 
 train_ims,train_lbs,test_ims,test_lbs =\
-torch.tensor(train_ims,dtype=torch.float32),\
+torch.tensor(train_ims,dtype=torch.float32 ),\
 torch.tensor(train_lbs),\
-torch.tensor(test_ims,dtype=torch.float32),\
+torch.tensor(test_ims, dtype=torch.float32 ),\
 torch.tensor(test_lbs)
 print("Train ims shape:",train_ims.shape,type(train_ims),train_ims.dtype)
 print("Train lbs shape:",train_lbs.shape,type(train_lbs))
@@ -97,73 +97,70 @@ class linear3layer(nn.Module):
         return self.Linear_stack(x)
         pass
 
-lr = 1e-3
-batch_size = 64
-
-# invocing network class
+# invoking network class
 model = linear3layer().to(device)
 print(model)
-
-loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(),lr)
 
 # length of image data set
 num_train_ims = len(train_ims)
 num_test_ims = len(test_ims)
 def train_loop(data,data_lbs,model,loss_fn,optimizer):
-    size = len(data)
-    model.train()
-    for idx in range(len(data)):
+    data_size = len(data)
+    avg_loss =0
+    #model.train()
+    for idx in range(data_size):
         X = data[idx,:].to(device)
         y= data_lbs[idx].to(device)
+
         #calculating prediction
         pred = model(X)
-        loss=  loss_fn(input=pred,target=y)
+        loss=  loss_fn(pred,y)
+        avg_loss += loss.item()
+        #print(pred,y)
+
         #backprop part
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-        if idx % 10000 == 0:
+        if idx % 6000 == 0:
             loss,current = loss.item(),(idx)#*len(X)
-            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+            print(f"loss: {loss:>7f}  [{current:>5d}/{data_size:>5d}]")
+    print(f"final avg loss:{avg_loss/ data_size:>7f}")
+
 
 
 def test_loop(data,data_lbs,model,loss_fn):
-    size = len(data)
-    num_batches = len(data)
+    data_size = len(data)
     test_loss, correct = 0, 0
-    model.eval()
+    #model.eval()
     with torch.no_grad():
         for idx in range(len(data)):
             X = data[idx, :].to(device)
             y = data_lbs[idx].to(device)
             # calculating prediction
             pred = model(X)
-            test_loss += loss_fn(input=pred, target=y).item()
+            test_loss += loss_fn(pred, y).item()
 
+            #counting the correct predictions
             #print(torch.argmax(pred),y)
             if torch.argmax(pred) == y:
                 correct+=1
-            #correct += (pred.argmax(1) == y).type(torch.float).sum().item()
 
-    test_loss /= num_batches
-    correct /= size
+
+    test_loss /= data_size
+    correct /= data_size
+    print(f"Finish testing w/ {data_size} test images")
     print(f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+
 # running the training and testing on the network model
-epochs = 1
+lr = 1e-3
+loss_fn = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(),lr)
+
+epochs = 15
 for i in range(epochs):
     print(f"Epoch {i+1}\n--------------")
     train_loop(train_ims,train_lbs,model,loss_fn,optimizer)
     test_loop(test_ims,test_lbs,model,loss_fn)
     print("DONE!")
-
-
-
-#torch.save(model.state_dict(), "model.pth")
-print("Saved PyTorch Model State to model.pth")
-
-weight_img = model.state_dict().keys()['weight'].reshape((NROWS,NCOLS))
-plt.figure(1)
-plt.imshow(weight_img)
-plt.show()
