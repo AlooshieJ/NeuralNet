@@ -147,18 +147,14 @@ val_lbs = np.where(val_lbs == 0 , -1,val_lbs)
 
 
 #Q9)
-#weights = np.random.normal(0.0, 1.0, size=(NROWS*NCOLS))
-weights = np.ones(NROWS*NCOLS)
+# I will be doing testing with these weight arrays
+weights = np.random.normal(0.0, 1.0, size=(NROWS*NCOLS))
+#weights = np.ones(NROWS*NCOLS)
 #weights = np.zeros(NROWS*NCOLS)
 num_training_samples = len(train_ims)
 num_val_samples = len(val_ims)
 print(num_training_samples)
-eta = 1#this is a scalar variable for the learning rate, choose a suitable value
-
-# the training function will return the weight as a numpy array
-def train_loop(train_data,train_label,val_data,val_label,eta,weight):
-    pass
-
+eta = .001#this is a scalar variable for the learning rate, choose a suitable value
 
 for idx in range(num_training_samples):
     #read the i-th image

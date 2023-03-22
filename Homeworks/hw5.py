@@ -6,14 +6,15 @@ import os
 import gzip
 import struct
 import numpy as np
-import matplotlib.pyplot as plt
 import torch
 from torch import nn
 
 
 #------------------------ loading mnist data in (from lab 3) ------------------------ #
-# DATASET_DIR = "dataset"
-DATASET_DIR = "/Users/alijafar/Desktop/PycharmCode/NeuralNet/LABS/Lab3/dataset"
+#DATASET_DIR = "/Users/alijafar/Desktop/PycharmCode/NeuralNet/LABS/Lab3/dataset" # directory 1
+DATASET_DIR = "E:\\491Code\Pytorch_Test\LABS\Lab3\dataset" # Windows directory
+
+
 MNIST_TRAIN_IMS_GZ = os.path.join(DATASET_DIR, "train-images-idx3-ubyte.gz")
 MNIST_TRAIN_LBS_GZ = os.path.join(DATASET_DIR, "train-labels-idx1-ubyte.gz")
 MNIST_TEST_IMS_GZ = os.path.join(DATASET_DIR, "t10k-images-idx3-ubyte.gz")
@@ -68,9 +69,9 @@ train_ims, train_lbs, test_ims, test_lbs = load_data()
 
 train_ims,train_lbs,test_ims,test_lbs =\
 torch.tensor(train_ims,dtype=torch.float32 ),\
-torch.tensor(train_lbs),\
+torch.tensor(train_lbs,dtype=torch.int64),\
 torch.tensor(test_ims, dtype=torch.float32 ),\
-torch.tensor(test_lbs)
+torch.tensor(test_lbs, dtype=torch.int64)
 print("Train ims shape:",train_ims.shape,type(train_ims),train_ims.dtype)
 print("Train lbs shape:",train_lbs.shape,type(train_lbs))
 print("Test ims shape:",test_ims.shape,type(test_ims))
@@ -101,9 +102,6 @@ class linear3layer(nn.Module):
 model = linear3layer().to(device)
 print(model)
 
-# length of image data set
-num_train_ims = len(train_ims)
-num_test_ims = len(test_ims)
 def train_loop(data,data_lbs,model,loss_fn,optimizer):
     data_size = len(data)
     avg_loss =0
@@ -116,7 +114,7 @@ def train_loop(data,data_lbs,model,loss_fn,optimizer):
         pred = model(X)
         loss=  loss_fn(pred,y)
         avg_loss += loss.item()
-        #print(pred,y)
+        # print(pred,y)
 
         #backprop part
         optimizer.zero_grad()
@@ -127,8 +125,6 @@ def train_loop(data,data_lbs,model,loss_fn,optimizer):
             loss,current = loss.item(),(idx)#*len(X)
             print(f"loss: {loss:>7f}  [{current:>5d}/{data_size:>5d}]")
     print(f"final avg loss:{avg_loss/ data_size:>7f}")
-
-
 
 def test_loop(data,data_lbs,model,loss_fn):
     data_size = len(data)
@@ -146,7 +142,6 @@ def test_loop(data,data_lbs,model,loss_fn):
             #print(torch.argmax(pred),y)
             if torch.argmax(pred) == y:
                 correct+=1
-
 
     test_loss /= data_size
     correct /= data_size
